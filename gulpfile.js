@@ -12,6 +12,9 @@ var eslint = require('gulp-eslint');
 var rimraf = require('rimraf');
 var tar = require('gulp-tar');
 var gzip = require('gulp-gzip');
+var _ = require('lodash');
+var aws = require('aws-sdk');
+var fs = require('fs');
 
 var pkg = require('./package.json');
 var packageName = pkg.name  + '-' + pkg.version;
@@ -22,7 +25,7 @@ var pathToKibana = '../kibana';
 var buildDir = path.resolve(__dirname, 'build');
 var targetDir = path.resolve(__dirname, 'target');
 var buildTarget = path.resolve(buildDir, pkg.name);
-var kibanaPluginDir = path.resolve(__dirname, pathToKibana, 'plugins', pkg.name);
+var kibanaPluginDir = path.resolve(__dirname, pathToKibana, 'installedPlugins', pkg.name);
 
 var include = [
   'package.json',
@@ -113,6 +116,40 @@ gulp.task('package', ['build'], function () {
     .pipe(tar(packageName + '.tar'))
     .pipe(gzip())
     .pipe(gulp.dest(targetDir));
+});
+
+gulp.task('release', ['package'], function (done) {
+  var filename = packageName + '.tar.gz';
+
+  // Upload to both elastic and kibana since there's been confusion about where the thing is.
+  var keys = [
+    'elastic/timelion-random/timelion-random-latest.tar.gz',
+    'elastic/timelion-random/' + filename
+  ];
+
+  _.each(keys, function (key) {
+    var s3 = new aws.S3();
+    var params = {
+      Bucket: 'download.elasticsearch.org',
+      Key: key,
+      Body: fs.createReadStream(path.join(targetDir, filename))
+    };
+    s3.upload(params, function (err, data) {
+      if (err) return done(err);
+      gutil.log('Finished', gutil.colors.cyan('uploaded') + ' Available at ' + data.Location);
+      keys.pop();
+    });
+  });
+
+  function waitForUpload() {
+    if (keys.length) {//we want it to match
+      setTimeout(waitForUpload, 50);//wait 50 millisecnds then recheck
+      return;
+    }
+    done();
+    //real action
+  }
+  waitForUpload();
 });
 
 gulp.task('dev', ['sync'], function () {
