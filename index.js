@@ -4,8 +4,8 @@ module.exports = function (kibana) {
     require: ['timelion'],
     init: function (server) {
       // Initialize your function plugins here.
-      server.plugins.timelion.addFunction(require('./functions/random'));
-      server.plugins.timelion.addFunction(require('./functions/shuffle'));
+      server.plugins.timelion.addFunction(require('./functions/aggregate'));
+      server.plugins.timelion.addFunction(require('./functions/orderby'));
     }
   });
 };
