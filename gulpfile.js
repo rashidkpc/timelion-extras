@@ -123,7 +123,7 @@ gulp.task('release', ['package'], function (done) {
 
   // Upload to both elastic and kibana since there's been confusion about where the thing is.
   var keys = [
-    'elastic/timelion-random/timelion-random-latest.tar.gz',
+    'elastic/timelion-random/timelion-extras-latest.tar.gz',
     'elastic/timelion-random/' + filename
   ];
 
