@@ -147,7 +147,7 @@ gulp.task('release', ['package'], function (done) {
     var s3 = new aws.S3();
     var params = {
       Bucket: 'download.elasticsearch.org',
-      Key: 'kibana/timelion-random/' + filename,
+      Key: 'kibana/timelion-extras/' + filename,
       Body: fs.createReadStream(path.join(targetDir, filename))
     };
     s3.upload(params, function (err, data) {
