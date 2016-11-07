@@ -6,6 +6,8 @@ module.exports = function (kibana) {
       // Initialize your function plugins here.
       server.plugins.timelion.addFunction(require('./functions/aggregate'));
       server.plugins.timelion.addFunction(require('./functions/orderby'));
+      server.plugins.timelion.addFunction(require('./functions/label_by_es_term'));
+
     }
   });
 };
