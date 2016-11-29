@@ -1,6 +1,6 @@
 {
   "name": "timelion-extras",
-  "version": "0.1.0",
+  "version": "kibana",
   "kibanas": [
     "5.0.0-alpha2",
     "5.0.0-alpha3",
