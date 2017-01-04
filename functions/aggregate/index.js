@@ -8,6 +8,7 @@ var functions = {
   min: require('./min'),
   max: require('./max'),
   last: require('./last'),
+  first: require('./first'),
   sum: require('./sum')
 };
 
