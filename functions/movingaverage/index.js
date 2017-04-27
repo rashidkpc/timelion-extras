@@ -35,7 +35,9 @@ module.exports = new Chainable('movingaverage', {
 
         // calculate how many buckets that _window represents
         const intervalMilliseconds = toMS(tlConfig.time.interval);
-        return Math.floor(windowMilliseconds / intervalMilliseconds) || 1;
+
+        // Round, floor, ceil? We're going with round because it splits the difference.
+        return Math.round(windowMilliseconds / intervalMilliseconds) || 1;
       }());
 
       _position = _position || 'center';
